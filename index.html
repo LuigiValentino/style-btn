@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StylesBTN</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background: linear-gradient(to right, #ced7ff, #f8a9ff);
+        color: #333;
+        padding: 20px;
+    }
+    .container {
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .template-button {
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        padding: 10px;
+        margin: 5px;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    .template-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .generated-button {
+        transition: all 0.3s ease;
+    }
+    .tab-button {
+        cursor: pointer;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        margin-right: 2px;
+        transition: all 0.3s;
+        border-radius: 4px;
+        background-color: #f7fafc;
+    }
+    .tab-button:hover {
+        background-color: #e2e8f0;
+    }
+    .tab-button.active {
+        background-color: #e2e8f0;
+        font-weight: bold;
+    }
+    .tab-content {
+        display: none;
+        position: relative;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #f7fafc;
+        padding: 32px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+    }
+    .copy-button {
+        position: absolute;
+        top: 2px;
+        right: 18px;
+        cursor: pointer;
+        border: none;
+        padding: 5px;
+        border-radius: 5px;
+        transition: background 0.3s;
+        width: 5px;
+    }
+
+</style>
+</head>
+<body class="p-6">
+<div class="container mx-auto rounded-lg p-6 shadow-lg">
+    <h1 class="text-4xl font-bold mb-6 text-center text-gray-900">StylesBTN</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800">Customiza tu propio botón</h2>
+            <form id="buttonForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-800 font-medium">Color de Fondo</label>
+                    <input type="color" id="bgColor" name="bgColor" class="mt-1 w-full" oninput="updateButton()">
+                    <div class="mt-2">
+                        <label class="block text-gray-800 font-medium">o Color-Gradient</label>
+                        <input type="text" id="bgGradient" name="bgGradient" placeholder="e.g. linear-gradient(to right, #667eea, #764ba2)" class="mt-1 w-full p-2 border rounded" oninput="updateButton()">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Color de Texto</label>
+                    <input type="color" id="textColor" name="textColor" class="mt-1 w-full" oninput="updateButton()">
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Borde</label>
+                    <input type="text" id="border" name="border" placeholder="e.g. 2px solid #000" class="mt-1 w-full p-2 border rounded" oninput="updateButton()">
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Sombra</label>
+                    <input type="text" id="shadow" name="shadow" placeholder="e.g. 2px 2px 5px rgba(0, 0, 0, 0.5)" class="mt-1 w-full p-2 border rounded" oninput="updateButton()">
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Tamaño del Texto</label>
+                    <input type="text" id="textSize" name="textSize" placeholder="e.g. 16px" class="mt-1 w-full p-2 border rounded" oninput="updateButton()">
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Fuente</label>
+                    <select id="fontFamily" name="fontFamily" class="mt-1 w-full p-2 border rounded" onchange="updateButton()">
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Verdana">Verdana</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Efecto Hover</label>
+                    <select id="hoverEffect" name="hoverEffect" class="mt-1 w-full p-2 border rounded" onchange="updateButton()">
+                        <option value="none">None</option>
+                        <option value="hover:bg-gray-700 hover:text-white">Invertir Colores</option>
+                        <option value="hover:scale-105">Aumentar Tamaño</option>
+                        <option value="hover:shadow-lg">Aumentar Sombra</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-800 font-medium">Plantillas</label>
+                    <div class="grid grid-cols-2 gap-2 mt-2">
+                        <button type="button" onclick="applyTemplate('template2')" class="template-button" style="background: linear-gradient(to right, #43cea2, #185a9d); color: #fff;">Template 1</button>
+                        <button type="button" onclick="applyTemplate('template3')" class="template-button" style="background: linear-gradient(to right, #ff758c, #ff7eb3); color: #fff;">Template 2</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+            <h2 class="text-2xl font-semibold mb-4 text-gray-800 text-center">Vista Previa</h2>
+
+            <div class="flex justify-center items-center">
+                <button id="previewButton" class="generated-button py-2 px-4 rounded bg-gray-200">Button</button>
+            </div>
+            <h3 class="text-2xl font-semibold mb-4 mt-6 text-gray-800">Código</h3>
+            <div>
+                <div class="flex">
+                    <button onclick="showTab('cssCode')" class="tab-button active">CSS</button>
+                    <button onclick="showTab('tailwindCode')" class="tab-button">Tailwind</button>
+                    <button onclick="showTab('sassCode')" class="tab-button">Sass</button>
+                </div>
+                <div id="cssCode" class="tab-content active">
+                    <button class="copy-button" onclick="copyToClipboard('#cssCode pre')"><i class="fas fa-copy"></i></button>
+                    <pre class="bg-gray-200 p-4 rounded"></pre>
+                    <button type="button" onclick="downloadFile('css')" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Descargar CSS</button>
+                </div>
+                <div id="tailwindCode" class="tab-content">
+                    <button class="copy-button" onclick="copyToClipboard('#tailwindCode pre')"><i class="fas fa-copy"></i></button>
+                    <pre class="bg-gray-200 p-4 rounded"></pre>
+                    <button type="button" onclick="downloadFile('tailwind')" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Descargar Tailwind</button>
+                </div>
+                <div id="sassCode" class="tab-content">
+                    <button class="copy-button" onclick="copyToClipboard('#sassCode pre')"><i class="fas fa-copy"></i></button>
+                    <pre class="bg-gray-200 p-4 rounded"></pre>
+                    <button type="button" onclick="downloadFile('sass')" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Descargar Sass</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateButton() {
+        const bgColor = document.getElementById('bgColor').value;
+        const bgGradient = document.getElementById('bgGradient').value;
+        const textColor = document.getElementById('textColor').value;
+        const border = document.getElementById('border').value;
+        const shadow = document.getElementById('shadow').value;
+        const textSize = document.getElementById('textSize').value;
+        const fontFamily = document.getElementById('fontFamily').value;
+        const hoverEffect = document.getElementById('hoverEffect').value;
+        
+        const previewButton = document.getElementById('previewButton');
+        
+        if (bgGradient) {
+            previewButton.style.backgroundImage = bgGradient;
+            previewButton.style.backgroundColor = '';
+        } else {
+            previewButton.style.backgroundColor = bgColor;
+            previewButton.style.backgroundImage = '';
+        }
+        previewButton.style.color = textColor;
+        previewButton.style.border = border;
+        previewButton.style.boxShadow = shadow;
+        previewButton.style.fontSize = textSize;
+        previewButton.style.fontFamily = fontFamily;
+        
+        previewButton.classList.remove('hover:bg-gray-700', 'hover:text-white', 'hover:scale-105', 'hover:shadow-lg');
+        
+        if (hoverEffect !== 'none') {
+            previewButton.classList.add(...hoverEffect.split(' '));
+        }
+        
+        const cssCode = `
+.generated-button {
+${bgGradient ? `background-image: ${bgGradient};` : `background-color: ${bgColor};`}
+color: ${textColor};
+border: ${border};
+box-shadow: ${shadow};
+font-size: ${textSize};
+font-family: ${fontFamily};
+}
+.generated-button:hover {
+${hoverEffect.includes('bg') ? `background-color: ${hoverEffect.split(':')[1]};` : ''}
+${hoverEffect.includes('text') ? `color: ${hoverEffect.split(':')[1]};` : ''}
+${hoverEffect.includes('scale') ? 'transform: scale(1.05);' : ''}
+${hoverEffect.includes('shadow') ? 'box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);' : ''}
+}
+        `;
+        
+        const tailwindCode = `
+class="bg-[${bgColor}] ${bgGradient ? `bg-gradient-to-r from-[${bgGradient.split(',')[1].trim()}] to-[${bgGradient.split(',')[2].trim()}]` : ''} text-[${textColor}] ${border ? 'border' : ''} ${shadow ? 'shadow' : ''} text-[${textSize}] font-${fontFamily.replace(/\s/g, '-').toLowerCase()} ${hoverEffect}"
+        `;
+
+        const sassCode = `
+.generated-button {
+${bgGradient ? `background-image: ${bgGradient};` : `background-color: ${bgColor};`}
+color: ${textColor};
+border: ${border};
+box-shadow: ${shadow};
+font-size: ${textSize};
+font-family: ${fontFamily};
+}
+.generated-button:hover {
+${hoverEffect.includes('bg') ? `background-color: ${hoverEffect.split(':')[1]};` : ''}
+${hoverEffect.includes('text') ? `color: ${hoverEffect.split(':')[1]};` : ''}
+${hoverEffect.includes('scale') ? 'transform: scale(1.05);' : ''}
+${hoverEffect.includes('shadow') ? 'box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);' : ''}
+}
+        `;
+        
+        document.querySelector('#cssCode pre').textContent = cssCode.trim();
+        document.querySelector('#tailwindCode pre').textContent = tailwindCode.trim();
+        document.querySelector('#sassCode pre').textContent = sassCode.trim();
+    }
+
+    function applyTemplate(template) {
+        let bgColor, bgGradient, textColor, border, shadow, textSize, fontFamily, hoverEffect;
+
+        switch(template) {
+            case 'template1':
+                bgGradient = 'linear-gradient(to right, #667eea, #764ba2)';
+                textColor = '#FFFFFF';
+                border = '2px solid #667eea';
+                shadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
+                textSize = '16px';
+                fontFamily = 'Arial';
+                hoverEffect = 'hover:bg-gray-700 hover:text-white';
+                break;
+            case 'template2':
+                bgGradient = 'linear-gradient(to right, #43cea2, #185a9d)';
+                textColor = '#FFFFFF';
+                border = 'none';
+                shadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                textSize = '18px';
+                fontFamily = 'Helvetica';
+                hoverEffect = 'hover:scale-105';
+                break;
+            case 'template3':
+                bgGradient = 'linear-gradient(to right, #ff758c, #ff7eb3)';
+                textColor = '#FFFFFF';
+                border = '1px dashed #000';
+                shadow = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
+                textSize = '20px';
+                fontFamily = 'Times New Roman';
+                hoverEffect = 'hover:shadow-lg';
+                break;
+            case 'template4':
+                bgGradient = 'linear-gradient(to right, #ee9ca7, #ffdde1)';
+                textColor = '#FFFFFF';
+                border = '2px solid #ee9ca7';
+                shadow = '0 10px 15px -3px rgba(139, 92, 246, 0.1), 0 4px 6px -2px rgba(139, 92, 246, 0.05)';
+                textSize = '16px';
+                fontFamily = 'Courier New';
+                hoverEffect = 'hover:bg-gray-700 hover:text-white';
+                break;
+            case 'template5':
+                bgGradient = 'linear-gradient(to right, #00c6ff, #0072ff)';
+                textColor = '#FFFFFF';
+                border = 'none';
+                shadow = '0 10px 15px -3px rgba(251, 191, 36, 0.1), 0 4px 6px -2px rgba(251, 191, 36, 0.05)';
+                textSize = '18px';
+                fontFamily = 'Verdana';
+                hoverEffect = 'hover:scale-105';
+                break;
+            case 'template6':
+                bgGradient = 'linear-gradient(to right, #f857a6, #ff5858)';
+                textColor = '#FFFFFF';
+                border = '1px solid #f857a6';
+                shadow = '0 10px 15px -3px rgba(236, 72, 153, 0.1), 0 4px 6px -2px rgba(236, 72, 153, 0.05)';
+                textSize = '20px';
+                fontFamily = 'Arial';
+                hoverEffect = 'hover:shadow-lg';
+                break;
+            case 'template7':
+                bgGradient = 'linear-gradient(to right, #34e89e, #0f3443)';
+                textColor = '#FFFFFF';
+                border = '2px solid #34e89e';
+                shadow = '2px 2px 5px rgba(0, 0, 0, 0.3)';
+                textSize = '16px';
+                fontFamily = 'Arial';
+                hoverEffect = 'hover:bg-gray-700 hover:text-white';
+                break;
+            case 'template8':
+                bgGradient = 'linear-gradient(to right, #fc5c7d, #6a82fb)';
+                textColor = '#FFFFFF';
+                border = 'none';
+                shadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                textSize = '18px';
+                fontFamily = 'Helvetica';
+                hoverEffect = 'hover:scale-105';
+                break;
+        }
+
+        document.getElementById('bgColor').value = bgGradient ? '' : bgColor;
+        document.getElementById('bgGradient').value = bgGradient || '';
+        document.getElementById('textColor').value = textColor;
+        document.getElementById('border').value = border;
+        document.getElementById('shadow').value = shadow;
+        document.getElementById('textSize').value = textSize;
+        document.getElementById('fontFamily').value = fontFamily;
+        document.getElementById('hoverEffect').value = hoverEffect;
+
+        updateButton();
+    }
+
+    function downloadFile(type) {
+        let code = '';
+        let filename = '';
+
+        switch(type) {
+            case 'css':
+                code = document.querySelector('#cssCode pre').textContent;
+                filename = 'button.css';
+                break;
+            case 'tailwind':
+                code = document.querySelector('#tailwindCode pre').textContent;
+                filename = 'button.html';
+                break;
+            case 'sass':
+                code = document.querySelector('#sassCode pre').textContent;
+                filename = 'button.scss';
+                break;
+        }
+
+        const blob = new Blob([code], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+
+        Swal.fire({
+            title: 'Archivo descargado',
+            text: `El archivo ${filename} se ha descargado correctamente.`,
+            icon: 'success',
+            confirmButtonText: 'Aceptar'
+        });
+    }
+
+    function showTab(tabId) {
+        const tabs = document.querySelectorAll('.tab-content');
+        const buttons = document.querySelectorAll('.tab-button');
+
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+        });
+        buttons.forEach(button => {
+            button.classList.remove('active');
+        });
+
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`button[onclick="showTab('${tabId}')"]`).classList.add('active');
+    }
+
+    function copyToClipboard(selector) {
+        const text = document.querySelector(selector).textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            Swal.fire({
+                title: 'Código copiado',
+                text: 'El código se ha copiado al portapapeles.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            });
+        }).catch(err => {
+            console.error('Error al copiar al portapapeles:', err);
+        });
+    }
+
+    document.getElementById('buttonForm').addEventListener('input', updateButton);
+</script>
+</body>
+</html>
